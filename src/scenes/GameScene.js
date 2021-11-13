@@ -11,6 +11,7 @@ let keyS;
 let keyD;
 let keySpace;
 let tHrow;
+let wait;
 
 class GameScene extends Phaser.Scene {
     constructor(test) {
@@ -35,7 +36,7 @@ class GameScene extends Phaser.Scene {
     create() {
         
 
-        player = this.physics.add.sprite(200, 450, 'player').setScale(0.75);
+        player = this.physics.add.sprite(200, 450, 'player').setScale(0.60);
 
         this.anims.create({
             key: 'playerAni',
@@ -47,7 +48,7 @@ class GameScene extends Phaser.Scene {
             repeat: -1
         })
 
-        tHrow = this.physics.add.sprite(200, 450, 'throw').setScale(0.75).setVisible(false);
+        tHrow = this.physics.add.sprite(200, 450, 'throw').setScale(0.60).setVisible(false);
 
         this.anims.create({
             key: 'throwAni',
@@ -136,13 +137,31 @@ class GameScene extends Phaser.Scene {
             player.setVelocityX(0);
         }
 
-        if(Phaser.Input.Keyboard.JustDown(keySpace,500)){
-            tHrow.setVisible(true);
-            player.setVisible(false);
+        // if(Phaser.Input.Keyboard.JustDown(keySpace)){
+        //     tHrow.setVisible(true);
+        //     player.setVisible(false);
+        // }else{
+        //     tHrow.setVisible(false);
+        //     player.setVisible(true);
+        // }
+
+        if(Phaser.Input.Keyboard.JustDown(keySpace)){
+            wait = this.time.addEvent({
+                delay: 5000,
+                callback: function () {
+                    tHrow.setVisible(true);
+                    player.setVisible(false);
+                    
+                },
+                callbackScope: this,
+                loop: false,
+                paused: false,
+            });
         }else{
             tHrow.setVisible(false);
             player.setVisible(true);
         }
+
 
         
         
