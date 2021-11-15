@@ -23,6 +23,9 @@ let evil_group;
 let SK;
 let bullet_group;
 
+let delay = 400;
+let timeSinceLastAttack = -400;
+
 class GameScene extends Phaser.Scene {
     constructor(test) {
         super({
@@ -133,20 +136,20 @@ class GameScene extends Phaser.Scene {
         
     //Timer Event
         evilCall = this.time.addEvent({
-        delay: 1000,
+        delay: 500,
         callback: function () {
         //สร้าง evil
-        evil = this.physics.add.sprite(1290, /*Phaser.Math.Between(350,700)*/450, 'evil').setScale(0.37)
+        evil = this.physics.add.sprite(1290, Phaser.Math.Between(350,700), 'evil').setScale(0.37)
         .setVisible(true);
 
         evil_group.add(evil);
 
-        this.physics.add.collider(SK, evil,(SK,evil)=>{
-            SK.destroy();
-            evil.destroy();
-        });
+        // this.physics.add.collider(SK, evil,(SK,evil)=>{
+        //     SK.destroy();
+        //     evil.destroy();
+        // });
         //กำหนดการเคลื่อนไหวของ evil
-        this.anims.create({
+        this.anims.create({-
             key: 'evilAni',
             frames: this.anims.generateFrameNumbers('evil', {
                 start: 0,
@@ -307,25 +310,46 @@ class GameScene extends Phaser.Scene {
         SK.anims.play('SKAni', true);
         bullet_group.add(SK);
         
-        SK.setVelocityX(700);-
-        }else{
-            
+        SK.setVelocityX(700);
         }
+            
+        
 
 
         
-        for (let i = 0; i < evil_group.getChildren().length; i++) {
-            if (evil_group.getChildren()[i].X < -200) {
-                evil_group.getChildren()[i].destroy();
-            }
-        }
+        // for (let i = 0; i < evil_group.getChildren().length; i++) {
+        //     if (evil_group.getChildren()[i].X < -200) {
+        //         evil_group.getChildren()[i].destroy();
+        //     }
+        // }
 
-        for (let i = 0; i < bullet_group.getChildren().length; i++) {
-            if (bullet_group.getChildren()[i].X > 700) {
-                bullet_group.getChildren()[i].destroy();
-            }
+        // for (let i = 0; i < bullet_group.getChildren().length; i++) {
+        //     if (bullet_group.getChildren()[i].X > 700) {
+        //         bullet_group.getChildren()[i].destroy();
+        //     }
 
-        }
+        // }
+
+        // if(65 in Phaser.Input.Keyboard.JustDown(keySpace) 
+        //     && time > (timeSinceLastAttack + delay) ) {
+        //         SK = this.physics.add.sprite(player.x+100, player.y-20, 'SK').setScale(0.1)
+        //         .setVisible(true);
+        
+        //         this.anims.create({
+        //             key: 'SKAni',
+        //             frames: this.anims.generateFrameNumbers('SK', {
+        //                 start: 0,
+        //                 end: 3
+        //             }),
+        //             duration: 250,    
+        //             repeat: -1
+        //         })
+        //         SK.anims.play('SKAni', true);
+        //         bullet_group.add(SK);
+                
+        //         SK.setVelocityX(700);
+        //     timeSinceLastAttack = time;
+        // }
         
     }
 }
