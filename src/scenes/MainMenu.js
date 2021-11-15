@@ -27,23 +27,23 @@ class MainMenu extends Phaser.Scene {
         background = this.add.image(640, 360, 'bg').setDepth(5);
         
        
-        playButton = this.physics.add.image(240, 390, 'play').setScale(0.5).setSize(350,200).setOffset(175,225).setDepth(10);
+        playButton = this.physics.add.image(240, 380, 'play').setScale(0.5).setDepth(10);
         playButton.setInteractive();
         playButton.on('pointerdown', () => {
             this.scene.start('GameScene')
          })
 
-        tutorialButton = this.physics.add.image(240, 510, 'tutorial').setScale(0.5).setSize(350,200).setOffset(175,225).setDepth(10);
-        // tutorialButton.setInteractive();
-        // tutorialButton.on('pointerdown', () => {
-        //     this.scene.start('Tutorial')
-        // })
+        tutorialButton = this.physics.add.image(240, 500, 'tutorial').setScale(0.5).setDepth(10);
+        tutorialButton.setInteractive();
+        tutorialButton.on('pointerdown', () => {
+            this.scene.start('Tutorial')
+        })
 
-        creditButton = this.physics.add.image(240, 630, 'credit').setScale(0.5).setSize(350,200).setOffset(175,225).setDepth(10);
-        // creditButton.setInteractive();
-        // creditButton.on('pointerdown', () => {
-        //     this.scene.start('Credit')
-        // })
+        creditButton = this.physics.add.image(240, 620, 'credit').setScale(0.5).setDepth(10);
+        creditButton.setInteractive();
+        creditButton.on('pointerdown', () => {
+            this.scene.start('Credit')
+        })
     }
 
     update(delta, time) {
