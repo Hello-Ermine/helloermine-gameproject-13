@@ -26,7 +26,7 @@ class MainMenu extends Phaser.Scene {
 
         background = this.add.image(640, 360, 'bg').setDepth(5);
         
-       
+       //Menu Button
         playButton = this.physics.add.image(240, 380, 'play').setScale(0.5).setDepth(10);
         playButton.setInteractive();
         playButton.on('pointerdown', () => {
@@ -36,13 +36,13 @@ class MainMenu extends Phaser.Scene {
         tutorialButton = this.physics.add.image(240, 500, 'tutorial').setScale(0.5).setDepth(10);
         tutorialButton.setInteractive();
         tutorialButton.on('pointerdown', () => {
-            this.scene.start('Tutorial')
+            this.scene.start('TutorialScene')
         })
 
         creditButton = this.physics.add.image(240, 620, 'credit').setScale(0.5).setDepth(10);
         creditButton.setInteractive();
         creditButton.on('pointerdown', () => {
-            this.scene.start('Credit')
+            this.scene.start('CreditScene')
         })
     }
 
