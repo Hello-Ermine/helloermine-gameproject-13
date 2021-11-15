@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 
+let background;
+
 //Button
 let playButton;
 let tutorialButton;
@@ -13,27 +15,35 @@ class MainMenu extends Phaser.Scene {
     }
 
     preload() {
+        this.load.image('bg', 'src/image/BgMenu.png');
+        this.load.image('play', 'src/image/PlayButton.png');
+        this.load.image('tutorial', 'src/image/TutorialButton.png');
+        this.load.image('credit', 'src/image/CreditButton.png');
 
     }
 
     create() {
-        playButton = this.add.image(, , 'play').setScale().setDepth(1);
+
+        background = this.add.image(640, 360, 'bg').setDepth(5);
+        
+       
+        playButton = this.physics.add.image(240, 390, 'play').setScale(0.5).setSize(350,200).setOffset(175,225).setDepth(10);
         playButton.setInteractive();
         playButton.on('pointerdown', () => {
             this.scene.start('GameScene')
-        })
+         })
 
-        tutorialButton = this.add.image(, , 'tutorial').setScale().setDepth(1);
-        tutorialButton.setInteractive();
-        tutorialButton.on('pointerdown', () => {
-            this.scene.start('Tutorial')
-        })
+        tutorialButton = this.physics.add.image(240, 510, 'tutorial').setScale(0.5).setSize(350,200).setOffset(175,225).setDepth(10);
+        // tutorialButton.setInteractive();
+        // tutorialButton.on('pointerdown', () => {
+        //     this.scene.start('Tutorial')
+        // })
 
-        creditButton = this.add.image(, , 'credit').setScale().setDepth(1);
-        creditButton.setInteractive();
-        creditButton.on('pointerdown', () => {
-            this.scene.start('Credit')
-        })
+        creditButton = this.physics.add.image(240, 630, 'credit').setScale(0.5).setSize(350,200).setOffset(175,225).setDepth(10);
+        // creditButton.setInteractive();
+        // creditButton.on('pointerdown', () => {
+        //     this.scene.start('Credit')
+        // })
     }
 
     update(delta, time) {

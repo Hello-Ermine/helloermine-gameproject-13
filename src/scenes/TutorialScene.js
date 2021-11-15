@@ -1,9 +1,9 @@
 import Phaser from "phaser";
 
-class Credit extends Phaser.Scene {
+class TutorialScene extends Phaser.Scene {
     constructor(test) {
         super({
-            key: 'Credit'
+            key: 'TutorialScene'
         });
     }
 
@@ -19,4 +19,4 @@ class Credit extends Phaser.Scene {
         
     }
 }
-export default Credit;
+export default TutorialScene;

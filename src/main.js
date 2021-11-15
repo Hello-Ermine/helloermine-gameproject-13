@@ -2,8 +2,8 @@ import 'phaser';
 import Phaser from 'phaser';
 import GameScene from './scenes/GameScene';
 import MainMenu from './scenes/MainMenu';
-import Credit from './scenes/Credit';
-import Tutorial from './scenes/Tutorial';
+import CreditScene from './scenes/CreditScene';
+import TutorialScene from './scenes/TutorialScene';
 
 
 const config = {
@@ -17,14 +17,14 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: false
+            debug: true
         }
     },
     scene: [
         MainMenu,
         GameScene,
-        Credit,
-        Tutorial
+        CreditScene,
+        TutorialScene
     ],
     
     
