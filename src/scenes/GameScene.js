@@ -33,7 +33,7 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('standright','src/image/emrine stand still.png');
 
-        this.load.image('BARN','src/image/BARN.png');
+        this.load.image('BARN','src/image/background222.png');
 
 
 
@@ -43,7 +43,7 @@ class GameScene extends Phaser.Scene {
 
         bg = this.physics.add.image(0, 0, 'BARN')
         .setOrigin(0,0)
-        .setScale(2.5);
+        .setScale(1);
         
         standright = this.physics.add.image(200, 450, 'standright')
         .setScale(0.90)
