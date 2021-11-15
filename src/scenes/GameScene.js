@@ -20,6 +20,8 @@ let wall;
 let evil;
 let evilCall;
 let evil_group;
+let SK;
+let bullet_group;
 
 class GameScene extends Phaser.Scene {
     constructor(test) {
@@ -39,6 +41,9 @@ class GameScene extends Phaser.Scene {
 
         this.load.spritesheet('evil','src/image/evilrun.png',
         { frameWidth: 391 , frameHeight: 342});
+
+        this.load.spritesheet('SK','src/image/UTSK.png',
+        { frameWidth: 443 , frameHeight: 443});
 
         this.load.image('standright','src/image/emrine stand still.png');
 
@@ -104,6 +109,9 @@ class GameScene extends Phaser.Scene {
             repeat: -1
         })
 
+        
+
+
         // evil = this.physics.add.sprite(200, 450, 'evil').setScale(0.37)
         // .setVisible(true);
 
@@ -117,19 +125,26 @@ class GameScene extends Phaser.Scene {
         //     repeat: -1
         // })
 
+        bullet_group = this.physics.add.group();
+
         evil_group = this.physics.add.group();
 
 
         
     //Timer Event
-        evilCall = this.time.addEvent({-
-        delay: 5000,
+        evilCall = this.time.addEvent({
+        delay: 1000,
         callback: function () {
         //สร้าง evil
-        evil = this.physics.add.sprite(1290, Phaser.Math.Between(300,720), 'evil').setScale(0.37)
+        evil = this.physics.add.sprite(1290, /*Phaser.Math.Between(350,700)*/450, 'evil').setScale(0.37)
         .setVisible(true);
 
         evil_group.add(evil);
+
+        this.physics.add.collider(SK, evil,(SK,evil)=>{
+            SK.destroy();
+            evil.destroy();
+        });
         //กำหนดการเคลื่อนไหวของ evil
         this.anims.create({
             key: 'evilAni',
@@ -143,6 +158,8 @@ class GameScene extends Phaser.Scene {
         evil.anims.play('evilAni', true);
         //evil เดินไปทางซ้าย
         evil.setVelocityX(Phaser.Math.Between(-700,-300));
+
+        
         
         },
         callbackScope: this,
@@ -196,6 +213,8 @@ class GameScene extends Phaser.Scene {
     this.physics.add.collider(tHrow, wall);
 
 
+
+
     
 
     
@@ -205,11 +224,6 @@ class GameScene extends Phaser.Scene {
         player.anims.play('playerAni', true);
         tHrow.anims.play('throwAni', true);
 
-        for (let i = 0; i < evil_group.getChildren().length; i++) {
-            if (evil_group.getChildren()[i].X < -200) {
-                evil_group.getChildren()[i].destroy();
-            }
-        }
         
 
         bg.tilePositionX += 3;
@@ -278,16 +292,40 @@ class GameScene extends Phaser.Scene {
         // }
 
         if(Phaser.Input.Keyboard.JustDown(keySpace)){
-            tHrow.setVisible(true);
-            player.setVisible(false);
-            
+            SK = this.physics.add.sprite(player.x+100, player.y-20, 'SK').setScale(0.1)
+        .setVisible(true);
+
+        this.anims.create({
+            key: 'SKAni',
+            frames: this.anims.generateFrameNumbers('SK', {
+                start: 0,
+                end: 3
+            }),
+            duration: 250,    
+            repeat: -1
+        })
+        SK.anims.play('SKAni', true);
+        bullet_group.add(SK);
+        
+        SK.setVelocityX(700);-
         }else{
-            tHrow.setVisible(false);
-            player.setVisible(true);
+            
         }
 
 
         
+        for (let i = 0; i < evil_group.getChildren().length; i++) {
+            if (evil_group.getChildren()[i].X < -200) {
+                evil_group.getChildren()[i].destroy();
+            }
+        }
+
+        for (let i = 0; i < bullet_group.getChildren().length; i++) {
+            if (bullet_group.getChildren()[i].X > 700) {
+                bullet_group.getChildren()[i].destroy();
+            }
+
+        }
         
     }
 }
