@@ -12,6 +12,8 @@ let keyD;
 let keySpace;
 let tHrow;
 let wait;
+let standright;
+let bg;
 
 class GameScene extends Phaser.Scene {
     constructor(test) {
@@ -29,14 +31,28 @@ class GameScene extends Phaser.Scene {
         this.load.spritesheet('throw','src/image/throwarggggg.png',
         { frameWidth: 252 , frameHeight: 262});
 
+        this.load.image('standright','src/image/emrine stand still.png');
+
+        this.load.image('BARN','src/image/background222.png');
+
 
 
     }
 
     create() {
+
+        bg = this.physics.add.image(0, 0, 'BARN')
+        .setOrigin(0,0)
+        .setScale(1);
+        
+        standright = this.physics.add.image(200, 450, 'standright')
+        .setScale(0.90)
+        .setVisible(true);
         
 
-        player = this.physics.add.sprite(200, 450, 'player').setScale(0.60);
+        player = this.physics.add.sprite(200, 450, 'player').setScale(0.90)
+        .setVisible(false);
+        
 
         this.anims.create({
             key: 'playerAni',
@@ -48,7 +64,8 @@ class GameScene extends Phaser.Scene {
             repeat: -1
         })
 
-        tHrow = this.physics.add.sprite(200, 450, 'throw').setScale(0.60).setVisible(false);
+        tHrow = this.physics.add.sprite(200, 450, 'throw').setScale(0.90)
+        .setVisible(false);
 
         this.anims.create({
             key: 'throwAni',
@@ -83,6 +100,8 @@ class GameScene extends Phaser.Scene {
         //     music.stop(); 
         //     running.stop();          
         // })
+
+    
         
 
 
@@ -96,7 +115,8 @@ class GameScene extends Phaser.Scene {
     
 
     player.setCollideWorldBounds(true);
-    tHrow.setCollideWorldBounds(true)  
+    tHrow.setCollideWorldBounds(true);
+    standright.setCollideWorldBounds(true)  
 
     
     }
@@ -106,35 +126,62 @@ class GameScene extends Phaser.Scene {
         tHrow.anims.play('throwAni', true);
 
 
-        if(keyW.isDown){
-            tHrow.setVelocityY(-500);
-        }else if(keyS.isDown){
-            tHrow.setVelocityY(500);
-        }else{
-            tHrow.setVelocityY(0);
-        }
-        if(keyA.isDown){
-            tHrow.setVelocityX(-500);
-        }else if(keyD.isDown){
-            tHrow.setVelocityX(500);
-        }else{
-            tHrow.setVelocityX(0);
-        }
+        // if(keyW.isDown){
+        //     tHrow.setVelocityY(-500);
+        // }else if(keyS.isDown){
+        //     tHrow.setVelocityY(500);
+        // }else{
+        //     tHrow.setVelocityY(0);
+        // }
+        // if(keyA.isDown){
+        //     tHrow.setVelocityX(-500);
+        // }else if(keyD.isDown){
+        //     tHrow.setVelocityX(500);
+        // }else{
+        //     tHrow.setVelocityX(0);
+        // }
 
 
         if(keyW.isDown){
             player.setVelocityY(-500);
+            player.setVisible(true);
+            standright.setVisible(false);
         }else if(keyS.isDown){
             player.setVelocityY(500);
+            player.setVisible(true);
+            standright.setVisible(false);
         }else{
             player.setVelocityY(0);
+            player.setVisible(false);
+            standright.setVisible(true);
         }
         if(keyA.isDown){
             player.setVelocityX(-500);
+            player.setVisible(true);
+            standright.setVisible(false);
         }else if(keyD.isDown){
             player.setVelocityX(500);
+            player.setVisible(true);
+            standright.setVisible(false);
         }else{
             player.setVelocityX(0);
+            player.setVisible(false);
+            standright.setVisible(true);
+        }
+        
+        if(keyW.isDown){
+            standright.setVelocityY(-500);
+        }else if(keyS.isDown){
+            standright.setVelocityY(500);
+        }else{
+            standright.setVelocityY(0);
+        }
+        if(keyA.isDown){
+            standright.setVelocityX(-500);
+        }else if(keyD.isDown){
+            standright.setVelocityX(500);
+        }else{
+            standright.setVelocityX(0);
         }
 
         // if(Phaser.Input.Keyboard.JustDown(keySpace)){
@@ -145,22 +192,12 @@ class GameScene extends Phaser.Scene {
         //     player.setVisible(true);
         // }
 
-        if(Phaser.Input.Keyboard.JustDown(keySpace)){
-            wait = this.time.addEvent({
-                delay: 5000,
-                callback: function () {
-                    tHrow.setVisible(true);
-                    player.setVisible(false);
-                    
-                },
-                callbackScope: this,
-                loop: false,
-                paused: false,
-            });
-        }else{
-            tHrow.setVisible(false);
-            player.setVisible(true);
-        }
+        // if(Phaser.Input.Keyboard.JustDown(keySpace)){
+            
+        // }else{
+        //     tHrow.setVisible(false);
+        //     player.setVisible(true);
+        // }
 
 
         
