@@ -50,7 +50,7 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('standright','src/image/emrine stand still.png');
 
-        this.load.image('village','src/image/1200px-Ninja_Village.png');
+        this.load.image('village','src/image/Hokage_Rock.png');
 
         this.load.image('BARN','src/image/background80.png');
 
@@ -70,8 +70,8 @@ class GameScene extends Phaser.Scene {
         .setImmovable()
         .setVisible(false);
 
-        village = this.add.tileSprite(640, 360, 1280, 800, 'village')
-        .setScale(1.5);
+        village = this.add.tileSprite(500, 500, 1280, 720, 'village')
+        .setScale(1);
 
         bg = this.add.tileSprite(640, 360, 1280, 720, 'BARN')
         .setScale(1);
@@ -113,6 +113,18 @@ class GameScene extends Phaser.Scene {
         })
 
         
+            
+        this.anims.create({
+            key: 'SKAni',
+            frames: this.anims.generateFrameNumbers('SK', {
+                start: 0,
+                end: 3
+            }),
+            duration: 250,    
+            repeat: -1
+        })
+                    
+        
 
 
         // evil = this.physics.add.sprite(200, 450, 'evil').setScale(0.37)
@@ -129,23 +141,18 @@ class GameScene extends Phaser.Scene {
         // })
 
         bullet_group = this.physics.add.group();
-
-        
         evil_group = this.physics.add.group();
+
+
     //Timer Event
         evilCall = this.time.addEvent({
-        delay: 5000,
+        delay: 500,
         callback: function () {
         //สร้าง evil
         evil = this.physics.add.sprite(1290, Phaser.Math.Between(350,700), 'evil').setScale(0.37)
         .setVisible(true);
-
         evil_group.add(evil);
 
-        this.physics.add.collider(SK, evil,()=>{
-            SK.destroy();
-            evil.destroy();
-                });       
                  //กำหนดการเคลื่อนไหวของ evil
         this.anims.create({
             key: 'evilAni',
@@ -280,23 +287,32 @@ class GameScene extends Phaser.Scene {
        
 
         if(Phaser.Input.Keyboard.JustDown(keySpace)){
-            
-            SK = this.physics.add.sprite(player.x+100, player.y-20, 'SK').setScale(0.1)
-        .setVisible(true);
 
-        this.anims.create({
-            key: 'SKAni',
-            frames: this.anims.generateFrameNumbers('SK', {
-                start: 0,
-                end: 3
-            }),
-            duration: 250,    
-            repeat: -1
-        })
-        SK.anims.play('SKAni', true);
-        bullet_group.add(SK);
-        
-        SK.setVelocityX(700);
+            this.time.addEvent({
+                delay: 100,
+                callback: function () {
+
+                    SK = this.physics.add.sprite(player.x+80, player.y-20, 'SK').setScale(0.1)
+                    .setVisible(true);
+                    bullet_group.add(SK);
+
+                    SK.anims.play('SKAni', true);
+                    SK.setVelocityX(700);
+
+                    this.physics.add.collider(bullet_group, evil_group,(SK,evil)=>{
+                        SK.destroy();
+                        evil.destroy();
+                    });       
+
+
+                
+       
+                },
+                callbackScope: this,
+                loop: false,
+                paused: false,
+                });
+            
 
         tHrow.setVisible(true);
             player.setVisible(false);
