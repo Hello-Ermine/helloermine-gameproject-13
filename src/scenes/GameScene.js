@@ -134,7 +134,7 @@ class GameScene extends Phaser.Scene {
         evil_group = this.physics.add.group();
     //Timer Event
         evilCall = this.time.addEvent({
-        delay: 1000,
+        delay: 5000,
         callback: function () {
         //สร้าง evil
         evil = this.physics.add.sprite(1290, Phaser.Math.Between(350,700), 'evil').setScale(0.37)
@@ -142,21 +142,21 @@ class GameScene extends Phaser.Scene {
 
         evil_group.add(evil);
 
-        // this.physics.add.collider(SK, evil,()=>{
-        //     SK.destroy();
-        //     evil.destroy();
-        // });
-        //กำหนดการเคลื่อนไหวของ evil
-        // this.anims.create({
-        //     key: 'evilAni',
-        //     frames: this.anims.generateFrameNumbers('evil', {
-        //         start: 0,
-        //         end: 3
-        //     }),
-        //     duration: 500,    
-        //     repeat: -1
-        // })
-        // evil.anims.play('evilAni', true);
+        this.physics.add.collider(SK, evil,()=>{
+            SK.destroy();
+            evil.destroy();
+                });       
+                 //กำหนดการเคลื่อนไหวของ evil
+        this.anims.create({
+            key: 'evilAni',
+            frames: this.anims.generateFrameNumbers('evil', {
+                start: 0,
+                end: 3
+            }),
+            duration: 500,    
+            repeat: -1
+        })
+        evil.anims.play('evilAni', true);
         //evil เดินไปทางซ้าย
         evil.setVelocityX(Phaser.Math.Between(-700,-300));
 
@@ -212,9 +212,6 @@ class GameScene extends Phaser.Scene {
 
 
 
-    
-
-    
     }
     update(delta, time) {
 
@@ -280,15 +277,10 @@ class GameScene extends Phaser.Scene {
         //     standright.setVelocityX(0);
         // }
 
-        // if(Phaser.Input.Keyboard.JustDown(keySpace)){
-        //     tHrow.setVisible(true);
-        //     player.setVisible(false);
-        // }else{
-        //     tHrow.setVisible(false);
-        //     player.setVisible(true);
-        // }
+       
 
         if(Phaser.Input.Keyboard.JustDown(keySpace)){
+            
             SK = this.physics.add.sprite(player.x+100, player.y-20, 'SK').setScale(0.1)
         .setVisible(true);
 
@@ -305,6 +297,24 @@ class GameScene extends Phaser.Scene {
         bullet_group.add(SK);
         
         SK.setVelocityX(700);
+
+        tHrow.setVisible(true);
+            player.setVisible(false);
+
+            this.time.addEvent({
+                delay: 250,
+                callback: function () {
+
+                    tHrow.setVisible(false);
+                    player.setVisible(true);
+                
+                    
+                 
+                },
+                callbackScope: this,
+                loop: false,
+                paused: false,
+                });
         }
             
         
