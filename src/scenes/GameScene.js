@@ -23,8 +23,10 @@ let evil_group;
 let SK;
 let bullet_group;
 
-let delay = 400;
-let timeSinceLastAttack = -400;
+
+let hp = 2;
+let over;
+
 
 class GameScene extends Phaser.Scene {
     constructor(test) {
@@ -52,17 +54,28 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('village','src/image/Hokage_Rock.png');
 
-        this.load.image('BARN','src/image/background80.png');
+        this.load.image('BARN','src/image/backgao3.png');
 
         this.load.image('grass','src/image/AUTgrass.png');
 
         this.load.image('wall','src/image/b734.png');
+
+        this.load.image('over','src/image/b734.png');
+
+        
+
+
 
 
 
     }
 
     create() {
+
+        over = this.add.image(500, 450, 'over')
+        .setScale(1)
+        .setDepth(100)
+        .setVisible(false);
 
         wall = this.physics.add.image(640, -180, 'wall')
         .setScale(2)
@@ -154,7 +167,7 @@ class GameScene extends Phaser.Scene {
         evil_group.add(evil);
 
                  //กำหนดการเคลื่อนไหวของ evil
-        this.anims.create({
+        this.anims.create({-
             key: 'evilAni',
             frames: this.anims.generateFrameNumbers('evil', {
                 start: 0,
@@ -165,7 +178,15 @@ class GameScene extends Phaser.Scene {
         })
         evil.anims.play('evilAni', true);
         //evil เดินไปทางซ้าย
-        evil.setVelocityX(Phaser.Math.Between(-700,-300));
+        evil.setVelocityX(Phaser.Math.Between(-1000,-800));
+
+        this.physics.add.overlap(player, evil_group,(player,evil)=>{
+            hp = hp - 1;
+            
+
+        });   
+
+
 
          
         },
@@ -370,7 +391,35 @@ class GameScene extends Phaser.Scene {
         //         SK.setVelocityX(700);
         //     timeSinceLastAttack = time;
         // }
-        
+
+        if(hp>=2){
+
+            hp = 2;
+            // heart2.setVisible(true);
+            // heart1.setVisible(true);
+
+        }
+        if(hp ==1){
+
+            // heart2.setVisible(false);
+            // heart1.setVisible(true);
+
+        }
+        if(hp ==1){
+            
+            // heart2.setVisible(false);
+            // heart1.setVisible(false);
+
+        }
+        if(hp <=0){
+
+            hp = 0;
+            // heart2.setVisible(false);
+            // heart1.setVisible(false);
+
+            over.setVisible(true);
+
+        }
     }
 }
 export default GameScene;
