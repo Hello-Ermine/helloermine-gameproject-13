@@ -130,13 +130,11 @@ class GameScene extends Phaser.Scene {
 
         bullet_group = this.physics.add.group();
 
-        evil_group = this.physics.add.group();
-
-
         
+        evil_group = this.physics.add.group();
     //Timer Event
         evilCall = this.time.addEvent({
-        delay: 500,
+        delay: 1000,
         callback: function () {
         //สร้าง evil
         evil = this.physics.add.sprite(1290, Phaser.Math.Between(350,700), 'evil').setScale(0.37)
@@ -144,35 +142,31 @@ class GameScene extends Phaser.Scene {
 
         evil_group.add(evil);
 
-        // this.physics.add.collider(SK, evil,(SK,evil)=>{
+        // this.physics.add.collider(SK, evil,()=>{
         //     SK.destroy();
         //     evil.destroy();
         // });
         //กำหนดการเคลื่อนไหวของ evil
-        this.anims.create({-
-            key: 'evilAni',
-            frames: this.anims.generateFrameNumbers('evil', {
-                start: 0,
-                end: 3
-            }),
-            duration: 500,    
-            repeat: -1
-        })
-        evil.anims.play('evilAni', true);
+        // this.anims.create({
+        //     key: 'evilAni',
+        //     frames: this.anims.generateFrameNumbers('evil', {
+        //         start: 0,
+        //         end: 3
+        //     }),
+        //     duration: 500,    
+        //     repeat: -1
+        // })
+        // evil.anims.play('evilAni', true);
         //evil เดินไปทางซ้าย
         evil.setVelocityX(Phaser.Math.Between(-700,-300));
 
-        
-        
+         
         },
         callbackScope: this,
         loop: true,
         paused: false,
         });
 
-        
-
-        
 
         // soundButton = this.add.image(410, 100, 'sound').setScale(0.2).setDepth(1);
         // soundButton.setInteractive();
@@ -317,18 +311,18 @@ class GameScene extends Phaser.Scene {
 
 
         
-        // for (let i = 0; i < evil_group.getChildren().length; i++) {
-        //     if (evil_group.getChildren()[i].X < -200) {
-        //         evil_group.getChildren()[i].destroy();
-        //     }
-        // }
+        for (let i = 0; i < evil_group.getChildren().length; i++) {
+            if (evil_group.getChildren()[i].X < 100) {
+                evil_group.getChildren()[i].destroy();
+            }
+        }
 
-        // for (let i = 0; i < bullet_group.getChildren().length; i++) {
-        //     if (bullet_group.getChildren()[i].X > 700) {
-        //         bullet_group.getChildren()[i].destroy();
-        //     }
+        for (let i = 0; i < bullet_group.getChildren().length; i++) {
+            if (bullet_group.getChildren()[i].X > 700) {
+                bullet_group.getChildren()[i].destroy();
+            }
 
-        // }
+        }
 
         // if(65 in Phaser.Input.Keyboard.JustDown(keySpace) 
         //     && time > (timeSinceLastAttack + delay) ) {
