@@ -43,6 +43,12 @@ let pickUp;
 let ab;
 let hit;
 let SKT;
+let kill;
+let go;
+let ga;
+let ct;
+
+let meterCount = 0;
 
 
 
@@ -64,10 +70,13 @@ class GameScene extends Phaser.Scene {
         { frameWidth: 252 , frameHeight: 262});
 
         this.load.spritesheet('evil','src/image/evilrun.png',
-        { frameWidth: 391 , frameHeight: 342});
+        { frameWidth: 391 , frameHeight: 362});
 
         this.load.spritesheet('SK','src/image/UTSK.png',
         { frameWidth: 443 , frameHeight: 443});
+
+        this.load.spritesheet('Go','src/image/GO.png',
+        { frameWidth: 600 , frameHeight: 338});
 
         this.load.image('standright','src/image/emrine stand still.png');
 
@@ -79,11 +88,11 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('wall','src/image/b734.png');
 
-        this.load.image('over','src/image/b734.png');
+        this.load.image('over','src/image/blood.jpg');
 
         this.load.image('heart','src/image/heart.png');
 
-        this.load.image('armor','src/image/armor.png');
+        this.load.image('armor','src/image/armor_con.png');
 
         this.load.image('armor_drop','src/image/armor.png');
 
@@ -104,6 +113,12 @@ class GameScene extends Phaser.Scene {
 
         this.load.audio('SK_Throw', ['src/sound/SK_Throw.mp3']);
 
+        this.load.audio('kill', ['src/sound/kill.mp3']);
+
+        this.load.audio('GameMusic', ['src/sound/GameMusic.mp3']);
+
+        this.load.audio('countDown', ['src/sound/countdown.mp3']);
+
         
 
 
@@ -114,13 +129,14 @@ class GameScene extends Phaser.Scene {
 
     create() {
 
-        armor_bar = this.add.image(200, 100, 'armor')
-        .setScale(0.17)
+
+        armor_bar = this.add.image(250, 100, 'armor')
+        .setScale(0.21)
         .setDepth(100)
         .setVisible(false);
 
         heart = this.add.image(100, 100, 'heart')
-        .setScale(0.15)
+        .setScale(0.2)
         .setDepth(100)
         .setVisible(true);
 
@@ -205,6 +221,66 @@ class GameScene extends Phaser.Scene {
         crow_group = this.physics.add.group();
 
 
+        this.time.addEvent({
+            delay: 4000,
+            callback: function () {
+
+                ct = this.sound.add('countDown').setVolume(0.5);
+                ct.play({loop: false});
+
+                go = this.physics.add.sprite(650, 400, 'Go').setScale(2)
+                .setDepth(101)
+                .setVisible(true);
+
+                this.anims.create({
+                    key: 'GoAni',
+                    frames: this.anims.generateFrameNumbers('Go', {
+                        start: 0,
+                        end: 23
+                    }),
+                    duration: 2000,    
+                    repeat: -1
+                })
+                go.anims.play('GoAni', true);
+
+                this.time.addEvent({
+                    delay: 2000,
+                    callback: function () {
+
+                        go.destroy();
+
+                    },
+                    callbackScope: this,
+                    loop: false,
+                    paused: false,
+                    });
+            },
+            callbackScope: this,
+            loop: false,
+            paused: false,
+            });
+
+
+           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        this.time.addEvent({
+            delay: 7000,
+            callback: function () {
+
         crowCall = this.time.addEvent({
             delay: 2000,
             callback: function () {
@@ -265,7 +341,23 @@ class GameScene extends Phaser.Scene {
         paused: false,
         });
 
-    
+    },
+
+        callbackScope: this,
+        loop: false,
+        paused: false,
+        });
+
+
+
+
+
+
+
+    this.time.addEvent({
+            delay: 7000,
+            callback: function () {
+
        evilCall = this.time.addEvent({
         delay: 1000,
         callback: function () {
@@ -324,7 +416,21 @@ class GameScene extends Phaser.Scene {
     loop: true,
     paused: false,
     });
-        
+},
+
+callbackScope: this,
+loop: false,
+paused: false,
+});
+
+
+
+    
+
+    this.time.addEvent({
+        delay: 7000,
+        callback: function () {
+
         armor_drop = this.time.addEvent({
             delay: 10000,
             callback: function () {
@@ -352,6 +458,12 @@ class GameScene extends Phaser.Scene {
         loop: true,
         paused: false,
         });
+
+    },
+    callbackScope: this,
+    loop: false,
+    paused: false,
+    });
 
 
         // soundButton = this.add.image(410, 100, 'sound').setScale(0.2).setDepth(1);
@@ -400,10 +512,19 @@ class GameScene extends Phaser.Scene {
     this.physics.add.collider(hurt, wall);
 
 
+    ga = this.sound.add('GameMusic').setVolume(0.5);
+    ga.play({loop: true});
+
+
+
 
 
     }
     update(delta, time) {
+
+        // meterCount++
+
+        // console.log(meterCount)
 
         player.anims.play('playerAni', true);
         tHrow.anims.play('throwAni', true);
@@ -494,6 +615,9 @@ class GameScene extends Phaser.Scene {
 
                     this.physics.add.collider(bullet_group, evil_group,(SK,evil)=>{
 
+                        kill = this.sound.add('kill').setVolume(1);
+                        kill.play({loop: false});
+
                         SK.destroy();
                         evil_die =  this.physics.add.image(evil.x, evil.y, 'evil_die').setScale(0.4)
                         .setDepth(100)
@@ -560,16 +684,34 @@ class GameScene extends Phaser.Scene {
         }
         if(hp <=0){
 
-            hit = this.sound.add('hit').setVolume(1);
-            hit.play({loop: false});
-
             hp = 0;
+
             armor_bar.setVisible(false);
             heart.setVisible(false);
 
+            over.setVisible(true);
+
+            ga.stop();
+            
+            this.time.addEvent({
+                delay: 100,
+                callback: function () {
+
+                    hit = this.sound.add('hit').setVolume(1);
+                    hit.play({loop: false});      
+
             this.scene.start('GameOver');
-            GOS = this.sound.add('GOS').setVolume(1);
+            GOS = this.sound.add('GOS').setVolume(1.5);
             GOS.play({loop: false});
+
+                
+            
+            },
+            callbackScope: this,
+            loop: false,
+            paused: false,
+            });
+    
 
         }
 

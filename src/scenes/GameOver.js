@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-let GOS;
+
 
 
 
@@ -15,7 +15,7 @@ class GameOver extends Phaser.Scene {
 
     preload() {
 
-        this.load.audio('GOS', ['src/sound/GameOverSound.mp3']);
+        
         
 
         
@@ -25,8 +25,7 @@ class GameOver extends Phaser.Scene {
     create() {
 
 
-        GOS = this.sound.add('GOS').setVolume(20);
-        GOS.play({loop: false});
+        
 
         // this.time.addEvent({
         //     delay: 500,
