@@ -23,8 +23,14 @@ let evil_group;
 let SK;
 let bullet_group;
 
+let evil_die;
 
-let hp = 2;
+let armor_drop;
+let armor_group;
+let armor_bar
+let armor;
+let heart ;
+let hp = 1;
 let over;
 
 
@@ -52,7 +58,7 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('standright','src/image/emrine stand still.png');
 
-        this.load.image('village','src/image/Hokage_Rock.png');
+        this.load.image('village','src/image/Background naruto.png');
 
         this.load.image('BARN','src/image/backgao3.png');
 
@@ -61,6 +67,14 @@ class GameScene extends Phaser.Scene {
         this.load.image('wall','src/image/b734.png');
 
         this.load.image('over','src/image/b734.png');
+
+        this.load.image('heart','src/image/heart.png');
+
+        this.load.image('armor','src/image/armor.png');
+
+        this.load.image('armor_drop','src/image/armor.png');
+
+        this.load.image('evil_die','src/image/evil_die.png');
 
         
 
@@ -71,6 +85,16 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
+
+        armor_bar = this.add.image(200, 100, 'armor')
+        .setScale(0.17)
+        .setDepth(100)
+        .setVisible(false);
+
+        heart = this.add.image(100, 100, 'heart')
+        .setScale(0.15)
+        .setDepth(100)
+        .setVisible(true);
 
         over = this.add.image(500, 450, 'over')
         .setScale(1)
@@ -83,8 +107,8 @@ class GameScene extends Phaser.Scene {
         .setImmovable()
         .setVisible(false);
 
-        village = this.add.tileSprite(500, 500, 1280, 720, 'village')
-        .setScale(1);
+        village = this.add.tileSprite(960, 350, 1280, 720, 'village')
+        .setScale(1.5);
 
         bg = this.add.tileSprite(640, 360, 1280, 720, 'BARN')
         .setScale(1);
@@ -155,19 +179,21 @@ class GameScene extends Phaser.Scene {
 
         bullet_group = this.physics.add.group();
         evil_group = this.physics.add.group();
+        armor_group = this.physics.add.group();
 
 
-    //Timer Event
-        evilCall = this.time.addEvent({
+
+    // Timer Event
+       evilCall = this.time.addEvent({
         delay: 500,
         callback: function () {
         //สร้าง evil
         evil = this.physics.add.sprite(1290, Phaser.Math.Between(350,700), 'evil').setScale(0.37)
         .setVisible(true);
         evil_group.add(evil);
-
+ 
                  //กำหนดการเคลื่อนไหวของ evil
-        this.anims.create({-
+        this.anims.create({
             key: 'evilAni',
             frames: this.anims.generateFrameNumbers('evil', {
                 start: 0,
@@ -181,14 +207,34 @@ class GameScene extends Phaser.Scene {
         evil.setVelocityX(Phaser.Math.Between(-1000,-800));
 
         this.physics.add.overlap(player, evil_group,(player,evil)=>{
+            evil.destroy();
             hp = hp - 1;
+            console.log("WRYYYYYY")
+
+        });
+    },
+    callbackScope: this,
+    loop: true,
+    paused: false,
+    });
+        
+        armor_drop = this.time.addEvent({
+            delay: 5000,
+            callback: function () {
+            //สร้าง armor
+            armor = this.physics.add.image(1380, Phaser.Math.Between(350,700), 'armor_drop').setScale(0.2)
+            .setDepth(90)
+            .setVisible(true);
+            armor_group.add(armor);
+
+                     
+            armor.setVelocityX(Phaser.Math.Between(-1000,-800));
+    
+            this.physics.add.overlap(player, armor_group,(player,armor)=>{
+                armor.destroy();
+                hp = hp + 1;
             
-
-        });   
-
-
-
-         
+            });  
         },
         callbackScope: this,
         loop: true,
@@ -321,8 +367,24 @@ class GameScene extends Phaser.Scene {
                     SK.setVelocityX(700);
 
                     this.physics.add.collider(bullet_group, evil_group,(SK,evil)=>{
+
                         SK.destroy();
+                        evil_die =  this.physics.add.image(evil.x, evil.y, 'evil_die').setScale(0.4)
+                        .setDepth(100)
+                        .setVisible(true);
+                        evil_die.setVelocityX(500);
                         evil.destroy();
+                        
+                        
+                        this.time.addEvent({
+                            delay: 250,
+                            callback: function(){
+                                evil_die.destroy();
+                            },
+                            callbackScope: this,
+                            loop: false,
+                            paused: false,
+                        });
                     });       
 
 
@@ -356,21 +418,6 @@ class GameScene extends Phaser.Scene {
             
         
 
-
-        
-        for (let i = 0; i < evil_group.getChildren().length; i++) {
-            if (evil_group.getChildren()[i].X < 100) {
-                evil_group.getChildren()[i].destroy();
-            }
-        }
-
-        for (let i = 0; i < bullet_group.getChildren().length; i++) {
-            if (bullet_group.getChildren()[i].X > 700) {
-                bullet_group.getChildren()[i].destroy();
-            }
-
-        }
-
         // if(65 in Phaser.Input.Keyboard.JustDown(keySpace) 
         //     && time > (timeSinceLastAttack + delay) ) {
         //         SK = this.physics.add.sprite(player.x+100, player.y-20, 'SK').setScale(0.1)
@@ -395,30 +442,40 @@ class GameScene extends Phaser.Scene {
         if(hp>=2){
 
             hp = 2;
-            // heart2.setVisible(true);
-            // heart1.setVisible(true);
+            armor_bar.setVisible(true);
+            heart.setVisible(true);
 
         }
         if(hp ==1){
 
-            // heart2.setVisible(false);
-            // heart1.setVisible(true);
-
-        }
-        if(hp ==1){
-            
-            // heart2.setVisible(false);
-            // heart1.setVisible(false);
+            armor_bar.setVisible(false);
+            heart.setVisible(true);
 
         }
         if(hp <=0){
 
             hp = 0;
-            // heart2.setVisible(false);
-            // heart1.setVisible(false);
+            armor_bar.setVisible(false);
+            heart.setVisible(false);
 
             over.setVisible(true);
 
+        }
+
+        for (let i = 0; i < evil_group.getChildren().length; i++) {
+            if (evil_group.getChildren()[i].x < -50) {
+                    evil_group.getChildren()[i].destroy();
+            }
+        }
+        for (let i = 0; i < bullet_group.getChildren().length; i++) {
+            if (bullet_group.getChildren()[i].x > 1310) {
+                    bullet_group.getChildren()[i].destroy();
+            }
+        }
+        for (let i = 0; i < armor_group.getChildren().length; i++) {
+            if (armor_group.getChildren()[i].x < -50) {
+                    armor_group.getChildren()[i].destroy();
+            }
         }
     }
 }
