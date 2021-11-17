@@ -38,6 +38,14 @@ let crow_group;
 
 let hurt;
 
+let GOS;
+let pickUp;
+let ab;
+let hit;
+let SKT;
+
+
+
 
 class GameScene extends Phaser.Scene {
     constructor(test) {
@@ -63,7 +71,7 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('standright','src/image/emrine stand still.png');
 
-        this.load.image('village','src/image/Background naruto.png');
+        this.load.image('village','src/image/Hokage_Rock.png');
 
         this.load.image('BARN','src/image/backgao3.png');
 
@@ -85,6 +93,16 @@ class GameScene extends Phaser.Scene {
         { frameWidth: 428 , frameHeight: 296});
 
         this.load.image('hurt','src/image/Jeb .png');
+
+        this.load.audio('GOS', ['src/sound/GameOverSound.mp3']);
+
+        this.load.audio('pickUp', ['src/sound/pickup.mp3']);
+
+        this.load.audio('armor_break', ['src/sound/armor_break.mp3']);
+
+        this.load.audio('hit', ['src/sound/hit.mp3']);
+
+        this.load.audio('SK_Throw', ['src/sound/SK_Throw.mp3']);
 
         
 
@@ -132,7 +150,7 @@ class GameScene extends Phaser.Scene {
         // .setVisible(true);
 
         hurt = this.physics.add.image(200, 450, 'hurt')
-        .setScale(0.39)
+        .setScale(0.37)
         .setDepth(99)
         .setVisible(false);
         
@@ -179,18 +197,7 @@ class GameScene extends Phaser.Scene {
         
 
 
-        // evil = this.physics.add.sprite(200, 450, 'evil').setScale(0.37)
-        // .setVisible(true);
-
-        // this.anims.create({
-        //     key: 'evilAni',
-        //     frames: this.anims.generateFrameNumbers('evil', {
-        //         start: 0,
-        //         end: 3
-        //     }),
-        //     duration: 500,    
-        //     repeat: -1
-        // })
+       
 
         bullet_group = this.physics.add.group();
         evil_group = this.physics.add.group();
@@ -198,113 +205,125 @@ class GameScene extends Phaser.Scene {
         crow_group = this.physics.add.group();
 
 
-    //     crowCall = this.time.addEvent({
-    //         delay: 2000,
-    //         callback: function () {
-    //         //สร้าง evil
-    //         crow = this.physics.add.sprite(1290, Phaser.Math.Between(350,700), 'crow').setScale(0.2)
-    //         .setVisible(true);
-    //         crow_group.add(crow);
+        crowCall = this.time.addEvent({
+            delay: 2000,
+            callback: function () {
+            //สร้าง evil
+            crow = this.physics.add.sprite(1290, Phaser.Math.Between(350,700), 'crow').setScale(0.2)
+            .setVisible(true);
+            crow_group.add(crow);
      
-    //                  //กำหนดการเคลื่อนไหวของ evil
-    //         this.anims.create({
-    //             key: 'crowAni',
-    //             frames: this.anims.generateFrameNumbers('crow', {
-    //                 start: 0,
-    //                 end: 3
-    //             }),
-    //             duration: 250,    
-    //             repeat: -1
-    //         })
-    //         crow.anims.play('crowAni', true);
-    //         //evil เดินไปทางซ้าย
-    //         crow.setVelocityX(-1250);
+                     //กำหนดการเคลื่อนไหวของ evil
+            this.anims.create({
+                key: 'crowAni',
+                frames: this.anims.generateFrameNumbers('crow', {
+                    start: 0,
+                    end: 3
+                }),
+                duration: 250,    
+                repeat: -1
+            })
+            crow.anims.play('crowAni', true);
+            //evil เดินไปทางซ้าย
+            crow.setVelocityX(-1250);
     
-    //         this.physics.add.overlap(player, crow_group,(player,crow)=>{
-    //             crow.destroy();
-    //             hp = hp - 1;
+            this.physics.add.overlap(player, crow_group,(player,crow)=>{
+                crow.destroy();
+                if(hp>=2){
 
-    //             hurt.setVisible(true);
+                    ab = this.sound.add('armor_break').setVolume(1);
+                    ab.play({loop: false});
+        
+                }
+                hp = hp - 1;
 
-    //         tHrow.setVisible(false);
-    //         player.setVisible(false);
+                hurt.setVisible(true);
 
-    //         this.time.addEvent({
-    //             delay: 250,
-    //             callback: function () {
+            tHrow.setVisible(false);
+            player.setVisible(false);
 
-    //                 hurt.setVisible(false);
-    //                 player.setVisible(true);
+            this.time.addEvent({
+                delay: 250,
+                callback: function () {
+
+                    hurt.setVisible(false);
+                    player.setVisible(true);
                 
                     
                  
-    //             },
-    //             callbackScope: this,
-    //             loop: false,
-    //             paused: false,
-    //             });
+                },
+                callbackScope: this,
+                loop: false,
+                paused: false,
+                });
                 
     
-    //         });
-    //     },
-    //     callbackScope: this,
-    //     loop: true,
-    //     paused: false,
-    //     });
+            });
+        },
+        callbackScope: this,
+        loop: true,
+        paused: false,
+        });
 
     
-    //    evilCall = this.time.addEvent({
-    //     delay: 1000,
-    //     callback: function () {
-    //     //สร้าง evil
-    //     evil = this.physics.add.sprite(1290, Phaser.Math.Between(350,700), 'evil').setScale(0.37)
-    //     .setVisible(true);
-    //     evil_group.add(evil);
+       evilCall = this.time.addEvent({
+        delay: 1000,
+        callback: function () {
+        //สร้าง evil
+        evil = this.physics.add.sprite(1290, Phaser.Math.Between(350,700), 'evil').setScale(0.37)
+        .setVisible(true);
+        evil_group.add(evil);
  
-    //              //กำหนดการเคลื่อนไหวของ evil
-    //     this.anims.create({
-    //         key: 'evilAni',
-    //         frames: this.anims.generateFrameNumbers('evil', {
-    //             start: 0,
-    //             end: 3
-    //         }),
-    //         duration: 500,    
-    //         repeat: -1
-    //     })
-    //     evil.anims.play('evilAni', true);
-    //     //evil เดินไปทางซ้าย
-    //     evil.setVelocityX(Phaser.Math.Between(-900,-700));
+                 //กำหนดการเคลื่อนไหวของ evil
+        this.anims.create({
+            key: 'evilAni',
+            frames: this.anims.generateFrameNumbers('evil', {
+                start: 0,
+                end: 3
+            }),
+            duration: 500,    
+            repeat: -1
+        })
+        evil.anims.play('evilAni', true);
+        //evil เดินไปทางซ้าย
+        evil.setVelocityX(Phaser.Math.Between(-900,-700));
 
-    //     this.physics.add.overlap(player, evil_group,(player,evil)=>{
-    //         evil.destroy();
-    //         hp = hp - 1;
+        this.physics.add.overlap(player, evil_group,(player,evil)=>{
+            evil.destroy();
+            if(hp>=2){
 
-    //         hurt.setVisible(true);
+            ab = this.sound.add('armor_break').setVolume(1);
+            ab.play({loop: false});
 
-    //         tHrow.setVisible(false);
-    //         player.setVisible(false);
+        }
+            hp = hp - 1;
 
-    //         this.time.addEvent({
-    //             delay: 250,
-    //             callback: function () {
+            hurt.setVisible(true);
 
-    //                 hurt.setVisible(false);
-    //                 player.setVisible(true);
+            tHrow.setVisible(false);
+            player.setVisible(false);
+
+            this.time.addEvent({
+                delay: 250,
+                callback: function () {
+
+                    hurt.setVisible(false);
+                    player.setVisible(true);
                 
                     
                  
-    //             },
-    //             callbackScope: this,
-    //             loop: false,
-    //             paused: false,
-    //             });
+                },
+                callbackScope: this,
+                loop: false,
+                paused: false,
+                });
 
-    //     });
-    // },
-    // callbackScope: this,
-    // loop: true,
-    // paused: false,
-    // });
+        });
+    },
+    callbackScope: this,
+    loop: true,
+    paused: false,
+    });
         
         armor_drop = this.time.addEvent({
             delay: 10000,
@@ -319,7 +338,12 @@ class GameScene extends Phaser.Scene {
             armor.setVelocityX(Phaser.Math.Between(-1000,-800));
     
             this.physics.add.overlap(player, armor_group,(player,armor)=>{
+
+                pickUp = this.sound.add('pickUp').setVolume(1);
+                pickUp.play({loop: false});
+
                 armor.destroy();
+
                 hp = hp + 1;
             
             });  
@@ -367,6 +391,9 @@ class GameScene extends Phaser.Scene {
 
     player.setCollideWorldBounds(true);
     tHrow.setCollideWorldBounds(true);
+    hurt.setCollideWorldBounds(true);
+    
+
 
     this.physics.add.collider(player, wall);
     this.physics.add.collider(tHrow, wall);
@@ -446,20 +473,7 @@ class GameScene extends Phaser.Scene {
             
         }
         
-        // if(keyW.isDown){
-        //     standright.setVelocityY(-500);
-        // }else if(keyS.isDown){
-        //     standright.setVelocityY(500);
-        // }else{
-        //     standright.setVelocityY(0);
-        // }
-        // if(keyA.isDown){
-        //     standright.setVelocityX(-500);
-        // }else if(keyD.isDown){
-        //     standright.setVelocityX(500);
-        // }else{
-        //     standright.setVelocityX(0);
-        // }
+    
 
        
 
@@ -468,6 +482,8 @@ class GameScene extends Phaser.Scene {
             this.time.addEvent({
                 delay: 100,
                 callback: function () {
+                    SKT = this.sound.add('SK_Throw').setVolume(1);
+                    SKT.play({loop: false});
 
                     SK = this.physics.add.sprite(player.x+80, player.y-20, 'SK').setScale(0.1)
                     .setVisible(true);
@@ -528,26 +544,6 @@ class GameScene extends Phaser.Scene {
             
         
 
-        // if(65 in Phaser.Input.Keyboard.JustDown(keySpace) 
-        //     && time > (timeSinceLastAttack + delay) ) {
-        //         SK = this.physics.add.sprite(player.x+100, player.y-20, 'SK').setScale(0.1)
-        //         .setVisible(true);
-        
-        //         this.anims.create({
-        //             key: 'SKAni',
-        //             frames: this.anims.generateFrameNumbers('SK', {
-        //                 start: 0,
-        //                 end: 3
-        //             }),
-        //             duration: 250,    
-        //             repeat: -1
-        //         })
-        //         SK.anims.play('SKAni', true);
-        //         bullet_group.add(SK);
-                
-        //         SK.setVelocityX(700);
-        //     timeSinceLastAttack = time;
-        // }
 
         if(hp>=2){
 
@@ -564,11 +560,16 @@ class GameScene extends Phaser.Scene {
         }
         if(hp <=0){
 
+            hit = this.sound.add('hit').setVolume(1);
+            hit.play({loop: false});
+
             hp = 0;
             armor_bar.setVisible(false);
             heart.setVisible(false);
 
-            over.setVisible(true);
+            this.scene.start('GameOver');
+            GOS = this.sound.add('GOS').setVolume(1);
+            GOS.play({loop: false});
 
         }
 
