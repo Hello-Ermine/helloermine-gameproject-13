@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-let finalScore;
+let score;
 let scoreText;
 
 let g1;
@@ -25,11 +25,11 @@ class GameOver extends Phaser.Scene {
         
     }
 
-    // init()
-    // {
-    //     console.log('init', data);
-    //     this.finalScore = data.score;
-    // }
+    init(data)
+    {
+        console.log('init', data);
+        score = data.score;
+    }
 
     
 
@@ -47,7 +47,7 @@ class GameOver extends Phaser.Scene {
     create() {
         
 
-        scoreText = this.add.text(640, 550, finalScore , { fontSize: '64px', fill: '#FFFFFF' })
+        scoreText = this.add.text(640, 550, score , { fontSize: '64px', fill: '#FFFFFF' })
         .setDepth(100)
         .setVisible(false);
                     

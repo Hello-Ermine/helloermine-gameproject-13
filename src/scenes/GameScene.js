@@ -68,6 +68,11 @@ class GameScene extends Phaser.Scene {
         });
     }
 
+    init(data)
+    {
+        score = 0;
+    }
+
     preload() {
         
 
@@ -237,7 +242,7 @@ class GameScene extends Phaser.Scene {
         })
 
         shadow = this.physics.add.image(200, 450, 'shadow').setScale(0.5)
-        .setDepth(2)
+        .setDepth(5)
         .setVisible(true);
 
 
@@ -674,7 +679,6 @@ paused: false,
                     .setScale(0.1)
                     .setVisible(true);
                     bullet_group.add(SK);
-
                     SK.anims.play('SKAni', true);
                     SK.setVelocityX(700);
 
@@ -741,13 +745,13 @@ paused: false,
 
             hp = 2;
             armor_bar.setVisible(true);
-            heart.setVisible(true);
+            heart.setVisible(false);
 
         }
         if(hp ==1){
 
             armor_bar.setVisible(false);
-            heart.setVisible(true);
+            heart.setVisible(false);
 
         }
         if(hp <=0){
@@ -768,7 +772,7 @@ paused: false,
                     hit = this.sound.add('hit').setVolume(1);
                     hit.play({loop: false});      
 
-            this.scene.start('GameOver'); /*,{ score: this.score }*/
+            this.scene.start('GameOver', {score : score});
 
             GOS = this.sound.add('GOS').setVolume(1.5);
             GOS.play({loop: false});
