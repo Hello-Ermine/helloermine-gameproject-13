@@ -4,6 +4,7 @@ import GameScene from './scenes/GameScene';
 import MainMenu from './scenes/MainMenu';
 import CreditScene from './scenes/CreditScene';
 import TutorialScene from './scenes/TutorialScene';
+import GameOver from './scenes/GameOver';
 
 
 const config = {
@@ -17,14 +18,16 @@ const config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: false
+            debug: true
         }
     },
     scene: [
         MainMenu,
         GameScene,
+        GameOver,
         CreditScene,
-        TutorialScene
+        TutorialScene,
+        
     ],
     
     

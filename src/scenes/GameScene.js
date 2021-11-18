@@ -2,6 +2,8 @@ import Phaser from "phaser";
 
 
 let player;
+let ar;
+let at;
 
 
 
@@ -11,6 +13,8 @@ let keyS;
 let keyD;
 let keySpace;
 let tHrow;
+
+let armor_up = 0;
 
 let shadow;
 
@@ -58,6 +62,9 @@ let rock;
 let score = 0;
 let scoreText;
 
+let mask;
+let score_bar;
+
 
 
 
@@ -82,6 +89,12 @@ class GameScene extends Phaser.Scene {
         this.load.spritesheet('throw','src/image/throwarggggg.png',
         { frameWidth: 252 , frameHeight: 262});
 
+        this.load.spritesheet('ar','src/image/ermine_armor.png',
+        { frameWidth: 317 , frameHeight: 343});
+
+        this.load.spritesheet('at','src/image/ar_throw.png',
+        { frameWidth: 339 , frameHeight: 343});
+
         this.load.spritesheet('evil','src/image/evilrun.png',
         { frameWidth: 391 , frameHeight: 362});
 
@@ -91,7 +104,8 @@ class GameScene extends Phaser.Scene {
         this.load.spritesheet('Go','src/image/GO.png',
         { frameWidth: 600 , frameHeight: 338});
 
-        this.load.image('standright','src/image/emrine stand still.png');
+        this.load.spritesheet('crow','src/image/crow.png',
+        { frameWidth: 428 , frameHeight: 296});
 
         this.load.image('village','src/image/Hokage_Rock.png');
 
@@ -105,7 +119,7 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('heart','src/image/heart.png');
 
-        this.load.image('armor','src/image/armor_con.png');
+        this.load.image('armor','src/image/armor.png');
 
         this.load.image('armor_drop','src/image/armor.png');
 
@@ -113,12 +127,13 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('shadow','src/image/shadow.png');
 
-        this.load.spritesheet('crow','src/image/crow.png',
-        { frameWidth: 428 , frameHeight: 296});
+        this.load.image('mask','src/image/mask.png');
+
+        this.load.image('score_bar','src/image/score_board.png');
 
         this.load.image('hurt','src/image/Jeb .png');
 
-        this.load.image('rock', ['src/image/Background naruto.png']);
+        this.load.image('rock', ['src/image/Tree.png']);
 
         this.load.audio('GOS', ['src/sound/GameOverSound.mp3']);
 
@@ -150,15 +165,25 @@ class GameScene extends Phaser.Scene {
 
     create() {
 
+        mask = this.add.image(1200, 80, 'mask')
+        .setScale(0.5)
+        .setDepth(100)
+        .setVisible(true);
 
-        rock = this.physics.add.image(2000, -680, 'rock')
+        score_bar = this.add.image(1085, 90, 'score_bar')
+        .setScale(0.3)
+        .setDepth(99)
+        .setVisible(true);
+
+        scoreText = this.add.text(1113, 65, score, { fontSize: '60px', fill: '#FFFFFF' }).setDepth(100);
+
+        rock = this.physics.add.image(3000, -20, 'rock')
         .setDepth(3)
-        .setScale(3)
+        .setScale(2)
         .setVelocityX(-1000);
 
-
-        armor_bar = this.add.image(250, 100, 'armor')
-        .setScale(0.21)
+        armor_bar = this.add.image(100, 80, 'armor')
+        .setScale(0.28)
         .setDepth(100)
         .setVisible(false);
 
@@ -200,9 +225,10 @@ class GameScene extends Phaser.Scene {
         .setVisible(false);
         
 
-        player = this.physics.add.sprite(200, 450, 'player').setScale(0.5)
+        player = this.physics.add.sprite(200, 450, 'player')
+        .setScale(0.5)
         .setDepth(10)
-        .setVisible(true);
+        .setVisible(false);
         
 
         this.anims.create({
@@ -215,13 +241,45 @@ class GameScene extends Phaser.Scene {
             repeat: -1
         })
 
-        tHrow = this.physics.add.sprite(200, 450, 'throw').setScale(0.5)
+        ar = this.physics.add.sprite(200, 450, 'ar')
+        .setScale(0.36)
+        .setDepth(10)
+        .setVisible(true);
+        
+
+        this.anims.create({
+            key: 'arAni',
+            frames: this.anims.generateFrameNumbers('ar', {
+                start: 0,
+                end: 3
+            }),
+            duration: 500,    
+            repeat: -1
+        })
+
+        tHrow = this.physics.add.sprite(200, 450, 'throw')
+        .setScale(0.5)
         .setDepth(10)
         .setVisible(false);
 
         this.anims.create({
             key: 'throwAni',
             frames: this.anims.generateFrameNumbers('throw', {
+                start: 0,
+                end: 3
+            }),
+            duration: 500,    
+            repeat: -1
+        })
+
+        at = this.physics.add.sprite(200, 450, 'at')
+        .setScale(0.36)
+        .setDepth(10)
+        .setVisible(false);
+
+        this.anims.create({
+            key: 'atAni',
+            frames: this.anims.generateFrameNumbers('at', {
                 start: 0,
                 end: 3
             }),
@@ -246,7 +304,6 @@ class GameScene extends Phaser.Scene {
         .setVisible(true);
 
 
-        scoreText = this.add.text(1000, 80, '0', { fontSize: '64px', fill: '#FFFFFF' }).setDepth(100);
                     
         
 
@@ -400,6 +457,7 @@ class GameScene extends Phaser.Scene {
             delay: 7000,
             callback: function () {
 
+
        evilCall = this.time.addEvent({
         delay: 1000,
         callback: function () {
@@ -422,7 +480,9 @@ class GameScene extends Phaser.Scene {
         })
         evil.anims.play('evilAni', true);
         //evil เดินไปทางซ้าย
-        evil.setVelocityX(Phaser.Math.Between(-900,-700));
+            evil.setVelocityX(Phaser.Math.Between(-1200,-1000));
+
+        
 
         this.physics.add.overlap(player, evil_group,(player,evil)=>{
             evil.destroy();
@@ -494,6 +554,8 @@ paused: false,
 
                 armor.destroy();
 
+                ar.setVisible(true);
+
                 hp = hp + 1;
             
             });  
@@ -549,6 +611,8 @@ paused: false,
     tHrow.setCollideWorldBounds(true);
     hurt.setCollideWorldBounds(true);
     shadow.setCollideWorldBounds(true);
+    ar.setCollideWorldBounds(true);
+    at.setCollideWorldBounds(true);
     
 
 
@@ -556,6 +620,8 @@ paused: false,
     this.physics.add.collider(tHrow, wall);
     this.physics.add.collider(hurt, wall);
     this.physics.add.collider(shadow, wall);
+    this.physics.add.collider(ar, wall);
+    this.physics.add.collider(at, wall);
 
 
     ga = this.sound.add('GameMusic').setVolume(0.5);
@@ -573,98 +639,158 @@ paused: false,
         // console.log(meterCount)
 
         player.anims.play('playerAni', true);
+        ar.anims.play('arAni', true);
         tHrow.anims.play('throwAni', true);
+        at.anims.play('atAni', true);
+
 
         
-
-        bg.tilePositionX += 3;
+        bg.tilePositionX += 5;
         village.tilePositionX += 0.1;
-        grass.tilePositionX += 8;
+        grass.tilePositionX += 10;
         
+        if(score > 20){
+            evilCall.delay = 500;
+
+        }else if(score > 50){
+            evilCall.delay = 250;
+
+        }else if(score > 100){
+            evilCall.delay = 100;
+        }
 
 
-        if(keyW.isDown){
-            tHrow.setVelocityY(-500);
-        }else if(keyS.isDown){
-            tHrow.setVelocityY(500);
-        }else{
-            tHrow.setVelocityY(0);
-        }
-        if(keyA.isDown){
-            tHrow.setVelocityX(-500);
-        }else if(keyD.isDown){
-            tHrow.setVelocityX(500);
-        }else{
-            tHrow.setVelocityX(0);
-        }
+    if(score>10){
+        this.tweens.add({
+            targets: scoreText,
+            x: 1078,
+            paused: false,
+            duration: 1,
+        })
+    }else if(score >100){
+        this.tweens.add({
+            targets: scoreText,
+            x: 1048,
+            paused: false,
+            duration: 1,
+        })
+
+    }else if(score >1000){
+        this.tweens.add({
+            targets: scoreText,
+            x: 1018,
+            paused: false,
+            duration: 1,
+        })
+
+    }
 
 
         if(keyW.isDown){
             player.setVelocityY(-500);
-           
+            tHrow.setVelocityY(-500);
+            hurt.setVelocityY(-500);
+            shadow.setVelocityY(-500);
+            ar.setVelocityY(-500);
+            at.setVelocityY(-500);
         }else if(keyS.isDown){
             player.setVelocityY(500);
-            
+            tHrow.setVelocityY(500);
+            hurt.setVelocityY(500);
+            shadow.setVelocityY(500);
+            ar.setVelocityY(500);
+            at.setVelocityY(500);
         }else{
             player.setVelocityY(0);
-
+            tHrow.setVelocityY(0);
+            hurt.setVelocityY(0);
+            shadow.setVelocityY(0);
+            ar.setVelocityY(0);
+            at.setVelocityY(0);
         }
         if(keyA.isDown){
             player.setVelocityX(-500);
-            
+            tHrow.setVelocityX(-500);
+            hurt.setVelocityX(-500);
+            shadow.setVelocityX(-500);
+            ar.setVelocityX(-500);
+            at.setVelocityX(-500);
         }else if(keyD.isDown){
             player.setVelocityX(500);
-            
+            tHrow.setVelocityX(500);
+            hurt.setVelocityX(500);
+            shadow.setVelocityX(500);
+            ar.setVelocityX(500);
+            at.setVelocityX(500);
         }else{
             player.setVelocityX(0);
-            
-        }
-
-        if(keyW.isDown){
-            hurt.setVelocityY(-500);
-           
-        }else if(keyS.isDown){
-            hurt.setVelocityY(500);
-            
-        }else{
-            hurt.setVelocityY(0);
-
-        }
-        if(keyA.isDown){
-            hurt.setVelocityX(-500);
-            
-        }else if(keyD.isDown){
-            hurt.setVelocityX(500);
-            
-        }else{
+            tHrow.setVelocityX(0);
             hurt.setVelocityX(0);
-            
-        }
-
-        if(keyW.isDown){
-            shadow.setVelocityY(-500);
-           
-        }else if(keyS.isDown){
-            shadow.setVelocityY(500);
-            
-        }else{
-            shadow.setVelocityY(0);
-
-        }
-        if(keyA.isDown){
-            shadow.setVelocityX(-500);
-            
-        }else if(keyD.isDown){
-            shadow.setVelocityX(500);
-            
-        }else{
             shadow.setVelocityX(0);
-            
+            ar.setVelocityX(0);
+            at.setVelocityX(0);
         }
-        
+
+        if(hp>=2){
+
+            hp = 2;
+
+            player.setVisible(false);
+            
+            
+
+            armor_bar.setVisible(true);
+            heart.setVisible(false);
+
+        }
+        if(hp ==1){
+
+            
+            ar.setVisible(false);
+            
+
+            armor_bar.setVisible(false);
+            heart.setVisible(false);
+
+        }
+        if(hp <=0){
+
+            hp = 0;
+
+            ar.setVisible(true);
+
+            armor_bar.setVisible(false);
+            heart.setVisible(false);
+
+            over.setVisible(true);
+
+            ga.stop();
+            
+            this.time.addEvent({
+                delay: 100,
+                callback: function () {
+
+                    hit = this.sound.add('hit').setVolume(1);
+                    hit.play({loop: false});      
+
+            this.scene.start('GameOver', {score : score});
+
+            GOS = this.sound.add('GOS').setVolume(1.5);
+            GOS.play({loop: false});
+
+                
+            
+            },
+            callbackScope: this,
+            loop: false,
+            paused: false,
+            });
+
+            
     
 
-       
+        }
+
 
         if(Phaser.Input.Keyboard.JustDown(keySpace)){
 
@@ -717,9 +843,30 @@ paused: false,
                 loop: false,
                 paused: false,
                 });
+
+                if(hp>=2){
+                    
+                    at.setVisible(true)
+                    ar.setVisible(false);
+
+            this.time.addEvent({
+                delay: 250,
+                callback: function () {
+
+                    at.setVisible(false);
+                    ar.setVisible(true);
+                
+                    
+                 
+                },
+                callbackScope: this,
+                loop: false,
+                paused: false,
+                });
+                }else{
             
 
-        tHrow.setVisible(true);
+            tHrow.setVisible(true);
             player.setVisible(false);
 
             this.time.addEvent({
@@ -735,58 +882,14 @@ paused: false,
                 callbackScope: this,
                 loop: false,
                 paused: false,
-                });
+                })
+            }
         }
             
         
 
 
-        if(hp>=2){
-
-            hp = 2;
-            armor_bar.setVisible(true);
-            heart.setVisible(false);
-
-        }
-        if(hp ==1){
-
-            armor_bar.setVisible(false);
-            heart.setVisible(false);
-
-        }
-        if(hp <=0){
-
-            hp = 0;
-
-            armor_bar.setVisible(false);
-            heart.setVisible(false);
-
-            over.setVisible(true);
-
-            ga.stop();
-            
-            this.time.addEvent({
-                delay: 100,
-                callback: function () {
-
-                    hit = this.sound.add('hit').setVolume(1);
-                    hit.play({loop: false});      
-
-            this.scene.start('GameOver', {score : score});
-
-            GOS = this.sound.add('GOS').setVolume(1.5);
-            GOS.play({loop: false});
-
-                
-            
-            },
-            callbackScope: this,
-            loop: false,
-            paused: false,
-            });
-    
-
-        }
+        
 
         for (let i = 0; i < evil_group.getChildren().length; i++) {
             if (evil_group.getChildren()[i].x < -100) {

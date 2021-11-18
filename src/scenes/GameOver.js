@@ -7,6 +7,8 @@ let g1;
 let g2;
 let g3;
 
+let mask;
+
 let thum;
 
 
@@ -40,14 +42,18 @@ class GameOver extends Phaser.Scene {
         this.load.image('g2','src/image/g2.png');
         this.load.image('g3','src/image/g3.png');
 
+        this.load.image('mask','src/image/mask.png');
+
         this.load.audio('thum', ['src/sound/Thum.mp3']);    
 
     }
 
     create() {
-        
 
-        scoreText = this.add.text(640, 550, score , { fontSize: '64px', fill: '#FFFFFF' })
+    
+
+        
+        scoreText = this.add.text(640, 550, score , { fontSize: '80px', fill: '#8B0000' })
         .setDepth(100)
         .setVisible(false);
                     
@@ -65,6 +71,8 @@ class GameOver extends Phaser.Scene {
                 .setScale(1)
                 .setDepth(100)
                 .setVisible(true);
+
+                
 
 
 
@@ -84,6 +92,10 @@ class GameOver extends Phaser.Scene {
                         .setDepth(100)
                         .setVisible(true);
 
+                        g3 = this.add.image(640, 450, 'g3')
+                        .setScale(1)
+                        .setDepth(100)
+                        .setVisible(true);
 
 
 
@@ -92,29 +104,26 @@ class GameOver extends Phaser.Scene {
 
 
 
-                        this.time.addEvent({
-                            delay: 1000,
-                            callback: function () {
 
-                                thum.play({loop: false});
-
-                                g3 = this.add.image(640, 450, 'g3')
-                                .setScale(1)
-                                .setDepth(100)
-                                .setVisible(true);
+                       
 
 
                                 this.time.addEvent({
-                                    delay: 4000,
+                                    delay: 2000,
                                     callback: function () {
 
                                         thum.play({loop: false});
 
                                         scoreText.setVisible(true);
 
+                                        mask = this.add.image(scoreText.x-100, 565, 'mask')
+                                        .setScale(0.5)
+                                        .setDepth(100)
+                                        .setVisible(true);
+
                                         
                         
-                                           
+                                
                                      
                                     },
                                     callbackScope: this,
@@ -126,13 +135,7 @@ class GameOver extends Phaser.Scene {
                             
                                 
                              
-                            },
-                            callbackScope: this,
-                            loop: false,
-                            paused: false,
-                            });
-        
-                        
+                            
                     
                         
 
@@ -158,6 +161,30 @@ class GameOver extends Phaser.Scene {
 
     }
     update(delta, time) {
+        if(score>10){
+            this.tweens.add({
+                targets: scoreText,
+                x: 608,
+                paused: false,
+                duration: 1,
+            })
+        }else if(score >100){
+            this.tweens.add({
+                targets: scoreText,
+                x: 588,
+                paused: false,
+                duration: 1,
+            })
+    
+        }else if(score >1000){
+            this.tweens.add({
+                targets: scoreText,
+                x: 558,
+                paused: false,
+                duration: 1,
+            })
+    
+        }
 
       
 
