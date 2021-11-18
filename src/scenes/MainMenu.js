@@ -38,7 +38,7 @@ class MainMenu extends Phaser.Scene {
         playButton.on('pointerout', function () {
             playButton.clearTint();
         });    
-        
+
         //tutorial
         tutorialButton = this.physics.add.image(240, 500, 'tutorial').setScale(0.5).setDepth(10);
         tutorialButton.setInteractive();
