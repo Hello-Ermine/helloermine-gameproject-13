@@ -6,6 +6,10 @@ let background;
 let playButton;
 let tutorialButton;
 let creditButton;
+let cross;
+let soundButton;
+//music
+let theme;
 
 class MainMenu extends Phaser.Scene {
     constructor(test) {
@@ -15,14 +19,29 @@ class MainMenu extends Phaser.Scene {
     }
 
     preload() {
+
+        //button part
         this.load.image('bg', 'src/image/BgMenu.png');
         this.load.image('play', 'src/image/PlayButton.png');
         this.load.image('tutorial', 'src/image/TutorialButton.png');
         this.load.image('credit', 'src/image/CreditButton.png');
 
+        //music part
+        this.load.audio('theme', ['src/sound/menu_theme.mp3']);
+        this.load.image('sound','src/image/soundbutton.png');
+        this.load.image('cross','src/image/cross.png');
+
+
+
     }
 
     create() {
+
+        this.cameras.main.fadeIn(1000);
+
+        //music
+        theme = this.sound.add('theme').setVolume(0.2);
+        theme.play({loop: true});
 
         background = this.add.image(640, 360, 'bg').setDepth(5);
         
@@ -30,7 +49,16 @@ class MainMenu extends Phaser.Scene {
         playButton = this.physics.add.image(240, 380, 'play').setScale(0.5).setDepth(10);
         playButton.setInteractive();
         playButton.on('pointerdown', () => {
-            this.scene.start('GameScene')
+            theme.stop();
+            this.cameras.main.fadeOut(1000);
+            this.time.addEvent({
+                delay: 1000,
+                callback: function () {
+                    this.scene.start('GameScene');
+            },
+            callbackScope: this,
+            loop: false,
+        });
         });
         playButton.on('pointerover', function () {
             playButton.setTint(0x9acd32);
@@ -63,7 +91,29 @@ class MainMenu extends Phaser.Scene {
         });
         creditButton.on('pointerout', function () {
             creditButton.clearTint();
-        }); 
+        });
+
+        //sound control
+        cross = this.add.image(1200, 100, 'cross').setScale(0.2).setDepth(100);
+        cross.setVisible(false);
+
+        soundButton = this.add.image(1200, 100, 'sound').setScale(0.7).setDepth(99);
+        soundButton.setInteractive();
+        soundButton.on('pointerup',()=>{
+            if(!theme.mute){
+                theme.mute = true;
+                cross.setVisible(true);
+            }else{
+                theme.mute = false;
+                cross.setVisible(false);
+            }             
+        })
+        soundButton.on('pointerover', function () {
+            soundButton.setTint(0x9acd32);
+        });
+        soundButton.on('pointerout', function () {
+            soundButton.clearTint();
+        });
     }
 
     update(delta, time) {

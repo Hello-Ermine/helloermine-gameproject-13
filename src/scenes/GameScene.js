@@ -165,6 +165,10 @@ class GameScene extends Phaser.Scene {
 
     create() {
 
+        
+
+        this.cameras.main.fadeIn(1000);
+
         mask = this.add.image(1200, 80, 'mask')
         .setScale(0.5)
         .setDepth(100)
@@ -757,7 +761,6 @@ paused: false,
 
             hp = 0;
 
-            ar.setVisible(true);
 
             armor_bar.setVisible(false);
             heart.setVisible(false);
@@ -774,7 +777,7 @@ paused: false,
                     hit.play({loop: false});      
 
             this.scene.start('GameOver', {score : score});
-
+            
             GOS = this.sound.add('GOS').setVolume(1.5);
             GOS.play({loop: false});
 
@@ -785,6 +788,7 @@ paused: false,
             loop: false,
             paused: false,
             });
+            
 
             
     

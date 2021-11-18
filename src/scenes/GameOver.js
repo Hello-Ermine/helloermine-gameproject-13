@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import GameScene from "./GameScene";
 
 let score;
 let scoreText;
@@ -10,6 +11,9 @@ let g3;
 let mask;
 
 let thum;
+
+let pg;
+let tm;
 
 
 
@@ -36,6 +40,9 @@ class GameOver extends Phaser.Scene {
     
 
     preload() {
+
+        this.load.image('pg','src/image/play_again.png');
+        this.load.image('tm','src/image/to_menu.png');
 
 
         this.load.image('g1','src/image/g1.png');
@@ -87,12 +94,12 @@ class GameOver extends Phaser.Scene {
 
                         thum.play({loop: false});
 
-                        g2 = this.add.image(640, 350, 'g2')
+                        g2 = this.add.image(640, 300, 'g2')
                         .setScale(1)
                         .setDepth(100)
                         .setVisible(true);
 
-                        g3 = this.add.image(640, 450, 'g3')
+                        g3 = this.add.image(640, 400, 'g3')
                         .setScale(1)
                         .setDepth(100)
                         .setVisible(true);
@@ -103,9 +110,6 @@ class GameOver extends Phaser.Scene {
 
 
 
-
-
-                       
 
 
                                 this.time.addEvent({
@@ -120,6 +124,55 @@ class GameOver extends Phaser.Scene {
                                         .setScale(0.5)
                                         .setDepth(100)
                                         .setVisible(true);
+
+                                        this.time.addEvent({
+                                            delay: 2000,
+                                            callback: function () {
+
+                                                tm = this.add.image(170, 650, 'tm')
+                                                .setScale(0.5)
+                                                .setDepth(100)
+                                                .setVisible(true);
+                                                tm.setInteractive();
+                                                tm.on('pointerdown', () => {
+                                                    this.cameras.main.fadeOut(1000);
+                                                    this.time.addEvent({
+                                                        delay: 1000,
+                                                        callback: function () {
+                                                        location.reload();
+                                                        },
+                                                        callbackScope: this,
+                                                        loop: false,
+                                                        });
+                                                    
+                                                });
+                                                tm.on('pointerover', function () {
+                                                    tm.setTint(0x9acd32);
+                                                });
+                                                tm.on('pointerout', function () {
+                                                    tm.clearTint();
+                                                }); 
+
+                                                // pg = this.add.image(1100, 650, 'pg')
+                                                // .setScale(0.5)
+                                                // .setDepth(100)
+                                                // .setVisible(true);
+                                                // pg.setInteractive();
+                                                // pg.on('pointerdown', () => {
+                                                    
+                                                // });
+                                                // pg.on('pointerover', function () {
+                                                //     pg.setTint(0x9acd32);
+                                                // });
+                                                // pg.on('pointerout', function () {
+                                                //     pg.clearTint();
+                                                // }); 
+                                             
+                                            },
+                                            callbackScope: this,
+                                            loop: false,
+                                            paused: false,
+                                            });
 
                                         
                         
