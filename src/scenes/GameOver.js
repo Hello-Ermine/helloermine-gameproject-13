@@ -15,6 +15,8 @@ let thum;
 let pg;
 let tm;
 
+let click;
+
 
 
 
@@ -65,6 +67,7 @@ class GameOver extends Phaser.Scene {
         .setVisible(false);
                     
         thum = this.sound.add('thum').setVolume(1);
+        click = this.sound.add('click').setVolume(0.3);
 
 
         this.time.addEvent({
@@ -135,6 +138,7 @@ class GameOver extends Phaser.Scene {
                                                 .setVisible(true);
                                                 tm.setInteractive();
                                                 tm.on('pointerdown', () => {
+                                                    click.play({loop: false});
                                                     this.cameras.main.fadeOut(1000);
                                                     this.time.addEvent({
                                                         delay: 1000,

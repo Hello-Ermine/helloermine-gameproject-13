@@ -320,6 +320,7 @@ class GameScene extends Phaser.Scene {
         crow_group = this.physics.add.group();
 
 
+        
         this.time.addEvent({
             delay: 4000,
             callback: function () {
@@ -361,7 +362,6 @@ class GameScene extends Phaser.Scene {
             paused: false,
             });
 
-
            
 
 
@@ -387,7 +387,7 @@ class GameScene extends Phaser.Scene {
             callback: function () {
             //สร้าง evil
             crow = this.physics.add.sprite(1290, Phaser.Math.Between(350,700), 'crow')
-            .setDepth(5)
+            .setDepth(6)
             .setScale(0.2)
             .setVisible(true);
             crow_group.add(crow);
@@ -416,7 +416,22 @@ class GameScene extends Phaser.Scene {
                 }
                 hp = hp - 1;
 
+                keySpace.enabled = false;
                 hurt.setVisible(true);
+
+                this.time.addEvent({
+                    delay: 500,
+                    callback: function () {
+    
+                        keySpace.enabled = true;
+                    
+                        
+                     
+                    },
+                    callbackScope: this,
+                    loop: false,
+                    paused: false,
+                    });
 
             tHrow.setVisible(false);
             player.setVisible(false);
@@ -498,7 +513,21 @@ class GameScene extends Phaser.Scene {
         }
             hp = hp - 1;
 
+            keySpace.enabled = false;
             hurt.setVisible(true);
+            this.time.addEvent({
+                delay: 500,
+                callback: function () {
+
+                    keySpace.enabled = true;
+                
+                    
+                 
+                },
+                callbackScope: this,
+                loop: false,
+                paused: false,
+                });
 
             tHrow.setVisible(false);
             player.setVisible(false);
@@ -604,10 +633,10 @@ paused: false,
 
 
         //Player Control
-    keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-    keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-    keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-    keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+    keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+    keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+    keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+    keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     keySpace = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     
 
@@ -646,6 +675,7 @@ paused: false,
         ar.anims.play('arAni', true);
         tHrow.anims.play('throwAni', true);
         at.anims.play('atAni', true);
+        
 
 
         
@@ -868,6 +898,7 @@ paused: false,
                 paused: false,
                 });
                 }else{
+                    
             
 
             tHrow.setVisible(true);

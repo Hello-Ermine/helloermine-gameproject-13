@@ -10,6 +10,7 @@ let cross;
 let soundButton;
 //music
 let theme;
+let click;
 
 class MainMenu extends Phaser.Scene {
     constructor(test) {
@@ -30,6 +31,7 @@ class MainMenu extends Phaser.Scene {
         this.load.audio('theme', ['src/sound/menu_theme.mp3']);
         this.load.image('sound','src/image/soundbutton.png');
         this.load.image('cross','src/image/cross.png');
+        this.load.audio('click','src/sound/click.mp3');
 
 
 
@@ -40,16 +42,19 @@ class MainMenu extends Phaser.Scene {
         this.cameras.main.fadeIn(1000);
 
         //music
-        theme = this.sound.add('theme').setVolume(0.2);
+        theme = this.sound.add('theme').setVolume(0.1);
         theme.play({loop: true});
+        click = this.sound.add('click').setVolume(0.3);
+        
 
         background = this.add.image(640, 360, 'bg').setDepth(5);
         
        //Play
         playButton = this.physics.add.image(240, 380, 'play').setScale(0.5).setDepth(10);
         playButton.setInteractive();
-        playButton.on('pointerdown', () => {
+        playButton.on('pointerup', () => {
             theme.stop();
+            click.play({loop: false});
             this.cameras.main.fadeOut(1000);
             this.time.addEvent({
                 delay: 1000,
@@ -70,8 +75,17 @@ class MainMenu extends Phaser.Scene {
         //tutorial
         tutorialButton = this.physics.add.image(240, 500, 'tutorial').setScale(0.5).setDepth(10);
         tutorialButton.setInteractive();
-        tutorialButton.on('pointerdown', () => {
-            this.scene.start('TutorialScene')
+        tutorialButton.on('pointerup', () => {
+            click.play({loop: false});
+            this.cameras.main.fadeOut(1000);
+            this.time.addEvent({
+                delay: 1000,
+                callback: function () {
+                    this.scene.start('TutorialScene');
+            },
+            callbackScope: this,
+            loop: false,
+        });
         });
         tutorialButton.on('pointerover', function () {
             tutorialButton.setTint(0x9acd32);
@@ -83,7 +97,7 @@ class MainMenu extends Phaser.Scene {
         //credit
         creditButton = this.physics.add.image(240, 620, 'credit').setScale(0.5).setDepth(10);
         creditButton.setInteractive();
-        creditButton.on('pointerdown', () => {
+        creditButton.on('pointerup', () => {
             this.scene.start('CreditScene')
         });
         creditButton.on('pointerover', function () {
