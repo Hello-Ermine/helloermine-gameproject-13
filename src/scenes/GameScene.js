@@ -14,7 +14,6 @@ let keyD;
 let keySpace;
 let tHrow;
 
-let armor_up = 0;
 
 let shadow;
 
@@ -55,7 +54,6 @@ let go;
 let ga;
 let ct;
 
-let meterCount = 0;
 
 let rock;
 
@@ -605,27 +603,7 @@ paused: false,
     });
 
 
-        // soundButton = this.add.image(410, 100, 'sound').setScale(0.2).setDepth(1);
-        // soundButton.setInteractive();
-        // soundButton.on('pointerup',()=>{
-        //     if(!this.sound.mute){
-        //         this.sound.mute = true;
-        //         cross.setVisible(true);
-        //     }else{
-        //         this.sound.mute = false;
-        //         cross.setVisible(false);
-        //     }             
-        // })
         
-        
-
-        // menuButton = this.add.image(410, 50, 'exit').setScale(0.3);
-        // menuButton.setInteractive();
-        // menuButton.on('pointerup',()=>{
-        //     this.scene.start('MainMenu');
-        //     music.stop(); 
-        //     running.stop();          
-        // })
 
     
         
@@ -667,9 +645,7 @@ paused: false,
     }
     update(delta, time) {
 
-        // meterCount++
-
-        // console.log(meterCount)
+        
 
         player.anims.play('playerAni', true);
         ar.anims.play('arAni', true);

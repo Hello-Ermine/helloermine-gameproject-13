@@ -11,6 +11,7 @@ let soundButton;
 //music
 let theme;
 let click;
+let p;
 
 class MainMenu extends Phaser.Scene {
     constructor(test) {
@@ -32,6 +33,7 @@ class MainMenu extends Phaser.Scene {
         this.load.image('sound','src/image/soundbutton.png');
         this.load.image('cross','src/image/cross.png');
         this.load.audio('click','src/sound/click.mp3');
+        this.load.audio('p', ['src/sound/pickup.mp3']);
 
 
 
@@ -45,6 +47,7 @@ class MainMenu extends Phaser.Scene {
         theme = this.sound.add('theme').setVolume(0.1);
         theme.play({loop: true});
         click = this.sound.add('click').setVolume(0.3);
+        p = this.sound.add('p').setVolume(0.3);
         
 
         background = this.add.image(640, 360, 'bg').setDepth(5);
@@ -124,6 +127,7 @@ class MainMenu extends Phaser.Scene {
         soundButton = this.add.image(1200, 100, 'sound').setScale(0.7).setDepth(99);
         soundButton.setInteractive();
         soundButton.on('pointerup',()=>{
+            p.play({loop: false});
             if(!theme.mute){
                 theme.mute = true;
                 cross.setVisible(true);
