@@ -670,25 +670,25 @@ paused: false,
         }
 
 
-    if(score>10){
+    if(score>=10 && score<100){
         this.tweens.add({
             targets: scoreText,
             x: 1078,
             paused: false,
             duration: 1,
         })
-    }else if(score >100){
+    }else if(score >=100 && score<1000){
         this.tweens.add({
             targets: scoreText,
-            x: 1048,
+            x: 1044,
             paused: false,
             duration: 1,
         })
 
-    }else if(score >1000){
+    }else if(score >=1000){
         this.tweens.add({
             targets: scoreText,
-            x: 1018,
+            x: 1013,
             paused: false,
             duration: 1,
         })

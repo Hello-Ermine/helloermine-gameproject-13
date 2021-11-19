@@ -218,14 +218,14 @@ class GameOver extends Phaser.Scene {
 
     }
     update(delta, time) {
-        if(score>10){
+        if(score>=10 && score<100){
             this.tweens.add({
                 targets: scoreText,
                 x: 608,
                 paused: false,
                 duration: 1,
             })
-        }else if(score >100){
+        }else if(score >=100 && score<1000){
             this.tweens.add({
                 targets: scoreText,
                 x: 588,
@@ -233,7 +233,7 @@ class GameOver extends Phaser.Scene {
                 duration: 1,
             })
     
-        }else if(score >1000){
+        }else if(score >=1000){
             this.tweens.add({
                 targets: scoreText,
                 x: 558,
