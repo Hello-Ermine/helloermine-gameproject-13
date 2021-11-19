@@ -59,7 +59,7 @@ class TutorialScene extends Phaser.Scene {
         this.cameras.main.fadeIn(1000);
 
         click = this.sound.add('click').setVolume(0.3);
-        flip = this.sound.add('flip').setVolume(0.3);
+        flip = this.sound.add('flip').setVolume(1);
 
         bs = this.add.image(0, 0, 'bs').setOrigin(0,0).setDepth(1).setVisible(true);
         en = this.add.image(0, 0, 'en').setOrigin(0,0).setDepth(1).setVisible(false);

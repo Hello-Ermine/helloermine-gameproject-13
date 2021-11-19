@@ -98,7 +98,17 @@ class MainMenu extends Phaser.Scene {
         creditButton = this.physics.add.image(240, 620, 'credit').setScale(0.5).setDepth(10);
         creditButton.setInteractive();
         creditButton.on('pointerup', () => {
-            this.scene.start('CreditScene')
+            theme.stop();
+            click.play({loop: false});
+            this.cameras.main.fadeOut(1000);
+            this.time.addEvent({
+                delay: 1000,
+                callback: function () {
+                    this.scene.start('CreditScene');
+            },
+            callbackScope: this,
+            loop: false,
+        });
         });
         creditButton.on('pointerover', function () {
             creditButton.setTint(0x9acd32);
