@@ -125,7 +125,7 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('shadow','src/image/shadow.png');
 
-        this.load.image('mask','src/image/mask.png');
+        this.load.image('mask','src/image/masks.png');
 
         this.load.image('score_bar','src/image/score_board.png');
 

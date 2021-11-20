@@ -51,7 +51,7 @@ class GameOver extends Phaser.Scene {
         this.load.image('g2','src/image/g2.png');
         this.load.image('g3','src/image/g3.png');
 
-        this.load.image('mask','src/image/mask.png');
+        this.load.image('mask','src/image/masks.png');
 
         this.load.audio('thum', ['src/sound/Thum.mp3']);    
 
